@@ -25,6 +25,9 @@ public class Patient {
     @NotNull
     private String address;
 
+    @NotNull
+    private LocalDate dateOfBirth;
+
     public UUID getId() {
         return id;
     }
@@ -65,6 +68,4 @@ public class Patient {
         this.dateOfBirth = dateOfBirth;
     }
 
-    @NotNull
-    private LocalDate dateOfBirth;
 }
