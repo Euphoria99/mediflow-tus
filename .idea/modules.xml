@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/billing_service/billing_service.iml" filepath="$PROJECT_DIR$/billing_service/billing_service.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/medice.iml" filepath="$PROJECT_DIR$/.idea/medice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/patient-service/patient-service.iml" filepath="$PROJECT_DIR$/patient-service/patient-service.iml" />
     </modules>
   </component>
 </project>
