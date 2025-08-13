@@ -13,20 +13,21 @@ services:
     networks:
       - patient-net
 
-  kafkac:
+  kafkanew:
     image: bitnami/kafka
-    container_name: kafkac
+    container_name: kafkanew
     ports:
-      - "9092:9092"
-      - "9094:9094"
+      - "9092:9092"   # internal
+      - "9094:9094"   # external (optional for local tools)
     environment:
-      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://kafkac:9092,EXTERNAL://localhost:9094
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://kafkanew:9092,EXTERNAL://localhost:9094
       KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafkac:9093
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafkanew:9093
       KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
       KAFKA_CFG_NODE_ID: 0
       KAFKA_CFG_PROCESS_ROLES: controller,broker
+      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "true"  # auto-create topics when producing
     networks:
       - patient-net
 
@@ -37,7 +38,9 @@ services:
       - "4000:4000"
     depends_on:
       - dbhealth-postgres
-      - kafkac
+      - kafkanew
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafkanew:9092
     networks:
       - patient-net
 
@@ -49,7 +52,22 @@ services:
       - "9001:9001"
     depends_on:
       - dbhealth-postgres
-      - kafkac
+      - kafkanew
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafkanew:9092
+    networks:
+      - patient-net
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafkanew:9092
+    depends_on:
+      - kafkanew
     networks:
       - patient-net
 

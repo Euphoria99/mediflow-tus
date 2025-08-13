@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
+import java.util.Base64;
 
 @Service
 public class KafkaProducer {
@@ -27,7 +28,12 @@ public class KafkaProducer {
                 .setEventType("PATIENT_CREATED")
                 .build();
 
+
+        byte[] payload = event.toByteArray();
+        String base64Payload = Base64.getEncoder().encodeToString(payload);
+
         try{
+            log.info("Sending PatientCreated event (Base64 encoded): {}", base64Payload);
             kafkaTemplate.send("patient", event.toByteArray());
         } catch(Exception e){
             log.error("Error sending PatientCreated event : {}", event);
