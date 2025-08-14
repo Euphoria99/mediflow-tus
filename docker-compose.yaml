@@ -58,6 +58,19 @@ services:
     networks:
       - patient-net
 
+  analytics-service:
+    image: analytics
+    container_name: analyticsservice
+    ports:
+      - "4002:4002"
+    depends_on:
+      - dbhealth-postgres
+      - kafkanew
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafkanew:9092
+    networks:
+      - patient-net
+
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
