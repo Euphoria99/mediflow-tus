@@ -34,8 +34,6 @@ services:
   patient-service:
     image: patientimg
     container_name: patient-service
-    ports:
-      - "4000:4000"
     depends_on:
       - dbhealth-postgres
       - kafkanew
@@ -68,6 +66,14 @@ services:
       - kafkanew
     environment:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafkanew:9092
+    networks:
+      - patient-net
+
+  api-gateway:
+    image: apigateway
+    container_name: apiserver
+    ports:
+      - "4004:4004"
     networks:
       - patient-net
 
